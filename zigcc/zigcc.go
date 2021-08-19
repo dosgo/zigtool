@@ -3,7 +3,7 @@ package main
 import (
 	"os/exec"
 	"fmt"
-	"zigtool/comm"
+	"github.com/dosgo/zigtool/comm"
 )
 
 func main()  {
