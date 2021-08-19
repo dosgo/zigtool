@@ -5,3 +5,7 @@ The golang tool of the zig compiler automatically compiles different targets acc
 go install github.com/dosgo/zigtool/zigcc@latest
 
 go install github.com/dosgo/zigtool/zigc++@latest
+
+
+set CC=zigcc
+set CXX=zigc++
