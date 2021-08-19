@@ -9,3 +9,7 @@ go install github.com/dosgo/zigtool/zigc++@latest
 
 set CC=zigcc
 set CXX=zigc++
+
+Manually set the compilation target
+
+set ZIGTARGET=x86_64-windows-gnu
