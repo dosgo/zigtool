@@ -1,15 +1,17 @@
 package comm
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
-	"runtime"
+	"strings"
 )
 
 func Build(buildName string) {
+	envs := getGoEnvs()
 	var target = ""
-	var goos = os.Getenv("GOOS")
-	var goarch = os.Getenv("GOARCH")
+	var goos = envs["GOOS"]
+	var goarch = envs["GOARCH"]
 	if goos == "windows" {
 		switch goarch {
 		case "386":
@@ -26,7 +28,7 @@ func Build(buildName string) {
 			break
 		}
 	}
-	if runtime.GOOS == "linux" {
+	if goos == "linux" {
 
 		switch goarch {
 		case "386":
@@ -55,6 +57,11 @@ func Build(buildName string) {
 			break
 		}
 	}
+	//no cross build
+	if envs["GOARCH"] == envs["GOHOSTARCH"] && envs["GOOS"] == envs["GOHOSTOS"] {
+		target = ""
+	}
+
 	var zigTarget = os.Getenv("ZIGTARGET")
 	if len(zigTarget) > 0 {
 		target = zigTarget
@@ -72,6 +79,21 @@ func Build(buildName string) {
 	cmd := exec.Command("zig", args...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
+	fmt.Printf("zig cmd:%s\r\n", strings.Join(cmd.Args, " "))
 	cmd.Start()
 	cmd.Wait()
+}
+
+func getGoEnvs() map[string]string {
+	var envs = make(map[string]string, 0)
+	cmd := exec.Command("go", "env")
+	out, _ := cmd.CombinedOutput()
+	lines := strings.Split(string(out), "\n")
+	for _, v := range lines {
+		kv := strings.Split(v, "=")
+		if len(kv) > 1 {
+			envs[strings.Trim(strings.Replace(kv[0], "set", "", -1), " ")] = kv[1]
+		}
+	}
+	return envs
 }
