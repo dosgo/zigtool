@@ -4,7 +4,7 @@ The golang tool of the zig compiler automatically compiles different targets acc
 
 go install github.com/dosgo/zigtool/zigcc@latest
 
-go install github.com/dosgo/zigtool/zigc++@latest
+go install github.com/dosgo/zigtool/zigc++@latest   (golang1.17+)    //There are bugs below 1.17, "+" is a special character
 
 
 set CC=zigcc
